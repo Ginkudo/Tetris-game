@@ -128,9 +128,18 @@ def create_grid(locked_pos = {}):
                         c = locked_pos[(j,i)]
                         grid[i][j] = c
       return grid
-def convert_shape_format():
-      pass
-def valid_space():
+def convert_shape_format(shape):
+      positions = []
+      format = shape.shape[shape.rotation % len(shape.shape)]
+      for i, line in enumerate(format):
+            row = list(line)
+            for j, column in enumerate(row):
+                  if column == '0':
+                        positions.append((shape.x + j, shape.y + i))
+      for i, pos in enumerate(positions):
+            positions[i] = (pos[0] - 2, pos[1] - 4)
+      return positions
+def valid_space(piece, grid):
       pass
 def check_lost():
       pass
@@ -139,11 +148,12 @@ def get_shape():
 def draw_text_middle():
       pass
 def draw_grid(surface, grid):
+      sx = top_left_x
+      sy = top_left_y
       for i in range(len(grid)):
+            pygame.draw.line(surface, (128,128,128), (sx, sy + i*block_size), (sx + play_width, sy + i*block_size))  # horizontal lines  
             for j in range(len(grid[i])):
-                  pygame.draw.rect(surface, grid[i][j], (top_left_x + j*block_size, top_left_y + i*block_size, block_size, block_size), 0)
-      pygame.display.rect(surface, (255,0,0), (top_left_x, top_left_y, play_width, play_height), 4)
-
+                  pygame.draw.line(surface, (128,128,128), (sx + j*block_size, sy), (sx + j*block_size, sy + play_height))  # vertical lines
 def clear_rows():
       pass
 def draw_next_shape():
@@ -154,6 +164,10 @@ def draw_window(surface, grid):
       font = pygame.font.SysFont('comicsans', 60)
       label = font.reader('Tetris', 1, (255,255,255))
       surface.blit(label, (top_left_x + play_width/2 - (label.get_width()/2), 30 ))
+      for i in range(len(grid)):
+            for j in range(len(grid[i])):
+                  pygame.draw.rect(surface, grid[i][j], (top_left_x + j*block_size, top_left_y + i*block_size, block_size, block_size), 0)
+      
       draw_grid(surface, grid)
       pygame.display.update()
 def main(win):
