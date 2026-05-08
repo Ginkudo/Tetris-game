@@ -138,11 +138,20 @@ def convert_shape_format(shape):
                         positions.append((shape.x + j, shape.y + i))
       for i, pos in enumerate(positions):
             positions[i] = (pos[0] - 2, pos[1] - 4)
-      return positions
-def valid_space(piece, grid):
-      pass
-def check_lost():
-      pass
+def valid_space(shape, grid):
+      accepted_pos = [[(j, i) for j in range(10) if grid[i][j] == (0,0,0)] for i in range(20)]
+      accepted_pos = [j for sub in accepted_pos for j in sub]
+      formatted = convert_shape_format(shape)
+      for pos in formatted:
+            if pos not in accepted_pos:
+                  if pos[1] > -1:
+                        return False
+      return True
+def check_lost(positions):
+      for pos in positions:
+            if pos[1] < 0:
+                  return True
+      return False
 def get_shape():
       return Piece(5, 0, random.choice(shapes))
 def draw_text_middle():
@@ -179,6 +188,8 @@ def main(win):
       next_piece = get_shape()
       clock = pygame.time.Clock()
       fall_time = 0
+      fall_speed = 0.27
+      
       while run:
             fall_speed = 0.27
             grid = create_grid(locked_positions)
