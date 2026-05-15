@@ -166,13 +166,23 @@ def draw_grid(surface, grid):
                   pygame.draw.line(surface, (128,128,128), (sx + j*block_size, sy), (sx + j*block_size, sy + play_height))  # vertical lines
 def clear_rows():
       pass
-def draw_next_shape():
-      pass
+def draw_next_shape(shape, surface):
+      font = pygame.font.SysFont('comicsans', 30)
+      label = font.render('Next Shape', 1, (255,255,255))
+      surface.blit(label, (top_left_x + play_width/2 - (label.get_width()/2), 30 ))
+      sx = top_left_x + play_width + 50
+      sy = top_left_y + play_height/2 - 100
+      format = shape.shape[shape.rotation % len(shape.shape)]
+      for i, line in enumerate(format):
+            row = list(line)
+            for j, column in enumerate(row):
+                  if column == '0':
+                        pygame.draw.rect(surface, shape.color, (sx + j*block_size, sy + i*block_size, block_size, block_size), 0)
 def draw_window(surface, grid):
       surface.fill((0,0,0))
       pygame.font.init()
       font = pygame.font.SysFont('comicsans', 60)
-      label = font.reader('Tetris', 1, (255,255,255))
+      label = font.render('Tetris', 1, (255,255,255))
       surface.blit(label, (top_left_x + play_width/2 - (label.get_width()/2), 30 ))
       for i in range(len(grid)):
             for j in range(len(grid[i])):
@@ -235,8 +245,9 @@ def main(win):
                   current_piece = get_shape()
                   change_piece = False
                   clear_rows(grid, locked_positions)
-            
             draw_window(win, grid)
+            draw_next_shape(next_piece, win)
+            pygame.display.update()
 
 def main_menu():
       pass
